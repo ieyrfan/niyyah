@@ -2,7 +2,7 @@ Saya akan tulis **README.md** yang lengkap dan profesional untuk repository NIYY
 
 ---
 
-## 📄 README.md – COPY & PASTE INI KE DALAM FILE
+## 📄 README.md
 
 ```markdown
 # 🕌 NIYYAH – Ummah Enlightened
