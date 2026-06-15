@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Amiri:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --font-arabic: "Amiri", serif;
+
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
+}
+
+:root {
+  --background: #F9FAFB;
+  --foreground: #0f172a;
+  --card-bg: #FFFFFF;
+  --card-border: #f1f5f9;
+  --muted: #64748b;
+}
+
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card-bg: #0f172a;
+  --card-border: #1e293b;
+  --muted: #94a3b8;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-morphism {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(30, 41, 59, 0.5);
+}
+
+/* Minimalist refinement */
+.card-minimal {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  @apply rounded-3xl shadow-sm transition-all duration-300;
+}
+
+.card-minimal:hover {
+  @apply shadow-md;
+  border-color: var(--muted);
+}
+

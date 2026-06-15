@@ -1,0 +1,311 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "User Profile",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "nama_paparan": { "type": "string" },
+        "zon_jakim": { "type": "string" },
+        "avatar_url": { "type": "string" },
+        "preferred_qari": { "type": "string" },
+        "timezone": { "type": "string" },
+        "notification_settings": {
+          "type": "object",
+          "properties": {
+             "fajr": { "type": "boolean" },
+             "dhuhr": { "type": "boolean" },
+             "asr": { "type": "boolean" },
+             "maghrib": { "type": "boolean" },
+             "isha": { "type": "boolean" },
+             "sunnah_reminders": { "type": "boolean" },
+             "offset": { "type": "number" }
+          }
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "nama_paparan"]
+    },
+    "TrackerSolat": {
+      "title": "Prayer Tracker",
+      "description": "Daily prayer completion log",
+      "type": "object",
+      "properties": {
+        "tarikh": { "type": "string", "format": "date" },
+        "subuh": { "type": "boolean" },
+        "zohor": { "type": "boolean" },
+        "asar": { "type": "boolean" },
+        "maghrib": { "type": "boolean" },
+        "isyak": { "type": "boolean" }
+      },
+      "required": ["tarikh"]
+    },
+    "TrackerPuasa": {
+      "title": "Fasting Tracker",
+      "description": "Fasting completion log",
+      "type": "object",
+      "properties": {
+        "tarikh": { "type": "string", "format": "date" },
+        "jenis": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["tarikh", "jenis"]
+    },
+    "BookmarkAyat": {
+      "title": "Quran Ayah Bookmark",
+      "description": "Saved Quran verses",
+      "type": "object",
+      "properties": {
+        "surah": { "type": "number" },
+        "ayat": { "type": "number" },
+        "nota": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["surah", "ayat"]
+    },
+    "BookmarkHadis": {
+      "title": "Hadith Bookmark",
+      "description": "Saved Hadiths",
+      "type": "object",
+      "properties": {
+        "edisi": { "type": "string" },
+        "nombor_hadis": { "type": "number" },
+        "nota": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["edisi", "nombor_hadis"]
+    },
+    "KoleksiDoa": {
+      "title": "Dua Collection",
+      "description": "Personal dua collection",
+      "type": "object",
+      "properties": {
+        "doa_arab": { "type": "string" },
+        "doa_transliterasi": { "type": "string" },
+        "doa_maksud": { "type": "string" },
+        "kategori": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["doa_arab"]
+    },
+    "Derma": {
+      "title": "Donation",
+      "description": "Donation records",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "jumlah": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "success", "failed"] },
+        "reference_id": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["jumlah"]
+    },
+    "KisahUmmah": {
+      "title": "Community Story",
+      "description": "Inspiring stories shared by users",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "tajuk": { "type": "string" },
+        "kandungan": { "type": "string" },
+        "kategori": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["tajuk", "kandungan"]
+    },
+    "AzamHarian": {
+      "title": "Daily Goal",
+      "description": "Daily spiritual goals",
+      "type": "object",
+      "properties": {
+        "tarikh": { "type": "string", "format": "date" },
+        "azam": { "type": "string" },
+        "tercapai": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["azam"]
+    },
+    "OnlineClass": {
+      "title": "Online Class",
+      "description": "Flexible online class details",
+      "type": "object",
+      "properties": {
+        "nama_kelas": { "type": "string" },
+        "kategori": { "type": "string" },
+        "penerangan": { "type": "string" },
+        "tahap": { "type": "string" },
+        "harga": { "type": "number" },
+        "link_meeting": { "type": "string" },
+        "gambar_url": { "type": "string" },
+        "kapasiti": { "type": "number" },
+        "umur_minimal": { "type": "number" },
+        "hari": { "type": "string" },
+        "tarikh_mula": { "type": "string", "format": "date" },
+        "tarikh_tamat": { "type": "string", "format": "date" },
+        "masa_mula": { "type": "string" },
+        "masa_tamat": { "type": "string" },
+        "created_by": { "type": "string" },
+        "instructor_name": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nama_kelas", "kategori", "link_meeting", "tarikh_mula", "masa_mula", "masa_tamat"]
+    },
+    "ClassEnrollment": {
+      "title": "Class Enrollment",
+      "description": "User participation in a class",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "class_id": { "type": "string" },
+        "class_name": { "type": "string" },
+        "joined_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "class_id"]
+    },
+    "ClassFavorite": {
+      "title": "Class Favorite",
+      "description": "User saved classes",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "class_id": { "type": "string" },
+        "saved_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "class_id"]
+    },
+    "ClassReview": {
+      "title": "Class Review",
+      "description": "User ratings and comments for a class",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "user_name": { "type": "string" },
+        "class_id": { "type": "string" },
+        "rating": { "type": "number" },
+        "komen": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["rating", "komen"]
+    },
+    "MualafQA": {
+      "title": "Mualaf Q&A",
+      "description": "Anonymous questions and answers for mualaf",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "soalan": { "type": "string" },
+        "jawapan": { "type": "string" },
+        "answered_by": { "type": "string" },
+        "answered_at": { "type": "string", "format": "date-time" },
+        "is_public": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["soalan", "created_at"]
+    },
+    "MualafMentor": {
+      "title": "Mualaf Mentor",
+      "description": "Approved mentors for mualaf support",
+      "type": "object",
+      "properties": {
+        "nama": { "type": "string" },
+        "bio": { "type": "string" },
+        "kelulusan": { "type": "string" },
+        "avatar_url": { "type": "string" },
+        "contact_link": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "is_approved": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nama", "status"]
+    },
+    "MualafBooking": {
+      "title": "Mentor Booking",
+      "description": "Video call bookings with mentors",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "mentorId": { "type": "string" },
+        "tarikh": { "type": "string", "format": "date" },
+        "masa": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
+        "meeting_link": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "mentorId", "tarikh", "masa"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "Profile",
+      "description": "User profile document"
+    },
+    "/users/{userId}/tracker_solat/{solatId}": {
+      "schema": "TrackerSolat",
+      "description": "Daily prayer tracking"
+    },
+    "/users/{userId}/tracker_puasa/{puasaId}": {
+      "schema": "TrackerPuasa",
+      "description": "Fasting tracking"
+    },
+    "/users/{userId}/bookmarks_ayat/{bookmarkId}": {
+      "schema": "BookmarkAyat",
+      "description": "Bookmarked ayahs"
+    },
+    "/users/{userId}/bookmarks_hadis/{bookmarkId}": {
+      "schema": "BookmarkHadis",
+      "description": "Bookmarked hadiths"
+    },
+    "/users/{userId}/koleksi_doa/{doaId}": {
+      "schema": "KoleksiDoa",
+      "description": "Custom dua collection"
+    },
+    "/users/{userId}/azam_harian/{azamId}": {
+      "schema": "AzamHarian",
+      "description": "Daily spiritual goals"
+    },
+    "/users/{userId}/saved_classes/{favoriteId}": {
+      "schema": "ClassFavorite",
+      "description": "User saved classes"
+    },
+    "/users/{userId}/mualaf_qa/{qaId}": {
+      "schema": "MualafQA",
+      "description": "Private Q&A for specific mualaf"
+    },
+    "/users/{userId}/mualaf_bookings/{bookingId}": {
+      "schema": "MualafBooking",
+      "description": "User bookings with mentors"
+    },
+    "/donations/{donationId}": {
+      "schema": "Derma",
+      "description": "Donation records"
+    },
+    "/stories/{storyId}": {
+      "schema": "KisahUmmah",
+      "description": "Public community stories"
+    },
+    "/classes/{classId}": {
+      "schema": "OnlineClass",
+      "description": "Online class collection"
+    },
+    "/classes/{classId}/enrollments/{enrollmentId}": {
+      "schema": "ClassEnrollment",
+      "description": "Class participants"
+    },
+    "/classes/{classId}/reviews/{reviewId}": {
+      "schema": "ClassReview",
+      "description": "Class reviews"
+    },
+    "/mualaf_public_qa/{qaId}": {
+      "schema": "MualafQA",
+      "description": "Public (FAQ) Q&A for mualaf"
+    },
+    "/mualaf_mentors/{mentorId}": {
+      "schema": "MualafMentor",
+      "description": "Public mentor profiles"
+    }
+  }
+}

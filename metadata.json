@@ -1,0 +1,13 @@
+{
+  "name": "NIYYAH",
+  "description": "Platform Islamik holistik untuk Muslim: Al-Quran, Mualaf Hub, Iqra', Hadis, Waktu Solat JAKIM, dan Tracker Ibadah. Mesra warga emas & bebas iklan.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "Quran API",
+    "JAKIM Prayer Times",
+    "Firebase Auth & Firestore",
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

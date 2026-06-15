@@ -1,0 +1,206 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+    function isValidProfile(data) {
+      return (data.get('email', '') is string)
+        && (data.get('nama_paparan', '') is string && data.get('nama_paparan', '').size() <= 100);
+    }
+
+    function isProfileComplete(data) {
+       return data.keys().hasAll(['email', 'nama_paparan']);
+    }
+
+    function isValidTrackerSolat(data) {
+      return data.keys().hasAll(['tarikh'])
+        && data.tarikh is string && data.tarikh.size() == 10;
+    }
+
+    function isValidStory(data) {
+      return data.keys().hasAll(['tajuk', 'kandungan', 'userId'])
+        && data.tajuk is string && data.tajuk.size() <= 200
+        && data.kandungan is string && data.kandungan.size() <= 5000
+        && data.userId == request.auth.uid;
+    }
+
+    function isValidClass(data) {
+      return data.keys().hasAll(['nama_kelas', 'kategori', 'link_meeting', 'tarikh_mula', 'masa_mula', 'masa_tamat', 'created_by', 'instructor_name'])
+        && data.nama_kelas is string && data.nama_kelas.size() <= 200
+        && data.kategori is string
+        && data.link_meeting is string
+        && data.instructor_name is string
+        && data.created_by == request.auth.uid;
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['rating', 'komen', 'user_id', 'class_id', 'user_name'])
+        && data.rating is number && data.rating >= 1 && data.rating <= 5
+        && data.komen is string && data.komen.size() <= 1000
+        && data.user_name is string
+        && data.user_id == request.auth.uid;
+    }
+
+    function isValidEnrollment(data) {
+      return data.keys().hasAll(['user_id', 'class_id', 'class_name'])
+        && data.user_id == request.auth.uid
+        && data.class_id is string;
+    }
+
+    function isValidMualafQA(data) {
+      return data.keys().hasAll(['soalan', 'created_at', 'is_public'])
+        && data.soalan is string && data.soalan.size() <= 2000
+        && data.created_at is timestamp
+        && data.is_public is bool;
+    }
+
+    function isValidMualafBooking(data) {
+      return data.keys().hasAll(['userId', 'mentorId', 'tarikh', 'masa'])
+        && data.userId == request.auth.uid
+        && data.mentorId is string
+        && data.tarikh is string
+        && data.masa is string;
+    }
+
+    // --- Rules ---
+    match /test/connection {
+      allow get: if true;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isProfileComplete(incoming()) && isValidProfile(incoming());
+      allow update: if isOwner(userId) && isValidProfile(incoming()) 
+        && incoming().diff(existing()).affectedKeys().hasOnly(['nama_paparan', 'zon_jakim', 'avatar_url', 'notification_settings', 'preferred_qari', 'timezone', 'updated_at', 'onboarding_completed', 'jantina', 'umur', 'badges', 'fcmTokens']);
+
+      match /tracker_solat/{solatId} {
+        allow list, get: if isOwner(userId);
+        allow create, update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+
+      match /tracker_puasa/{puasaId} {
+        allow list, get: if isOwner(userId);
+        allow create, update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+
+      match /bookmarks_ayat/{bookmarkId} {
+        allow list, get: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId);
+      }
+
+      match /bookmarks_hadis/{bookmarkId} {
+        allow list, get: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId);
+      }
+
+      match /koleksi_doa/{doaId} {
+        allow list, get: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId);
+      }
+
+      match /azam_harian/{azamId} {
+        allow list, get: if isOwner(userId);
+        allow create, update, delete: if isOwner(userId);
+      }
+
+      match /saved_classes/{favoriteId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId);
+        allow create: if isOwner(userId) && incoming().user_id == userId;
+        allow delete: if isOwner(userId);
+      }
+
+      match /mualaf_qa/{qaId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidMualafQA(incoming());
+        allow delete: if isOwner(userId);
+      }
+
+      match /mualaf_bookings/{bookingId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidMualafBooking(incoming());
+        allow delete: if isOwner(userId);
+      }
+    }
+
+    match /donations/{donationId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow get: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    match /mualaf_public_qa/{qaId} {
+      allow list, get: if true; // Public access for FAQ
+    }
+
+    match /mualaf_mentors/{mentorId} {
+      allow list, get: if true;
+    }
+
+    match /stories/{storyId} {
+      allow list: if resource.data.status == 'approved' || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow get: if existing().status == 'approved' || (isSignedIn() && existing().userId == request.auth.uid);
+      allow create: if isSignedIn() && isValidStory(incoming()) && incoming().status == 'pending';
+      allow update: if isSignedIn() && existing().userId == request.auth.uid 
+        && existing().status == 'pending' 
+        && incoming().diff(existing()).affectedKeys().hasOnly(['tajuk', 'kandungan', 'kategori'])
+        && isValidStory(incoming());
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid && existing().status == 'pending';
+    }
+
+    match /classes/{classId} {
+      allow list, get: if true; // Public marketplace access
+      allow create: if isSignedIn() && isValidClass(incoming());
+      allow update: if isSignedIn() && existing().created_by == request.auth.uid 
+        && isValidClass(incoming());
+      allow delete: if isSignedIn() && existing().created_by == request.auth.uid;
+
+      match /enrollments/{enrollmentId} {
+        // Removed get() from list rule to comply with O(n) read optimization mandate
+        allow list: if isSignedIn() && resource.data.user_id == request.auth.uid;
+        allow get: if isSignedIn();
+        allow create: if isSignedIn() && isValidEnrollment(incoming());
+        allow delete: if isSignedIn() && existing().user_id == request.auth.uid;
+      }
+
+      match /reviews/{reviewId} {
+        allow list, get: if true; // Public reviews
+        allow create: if isSignedIn() && isValidReview(incoming()) 
+          && exists(/databases/$(database)/documents/classes/$(classId)/enrollments/$(request.auth.uid)); // Check if enrolled using document exists (O(1))
+        allow update, delete: if isSignedIn() && existing().user_id == request.auth.uid && isValidReview(incoming());
+      }
+    }
+
+    // Collection group rule for user enrollments
+    match /{path=**}/enrollments/{enrollmentId} {
+      allow list: if isSignedIn() && resource.data.user_id == request.auth.uid;
+    }
+  }
+}
