@@ -1,10 +1,9 @@
 {
-  "projectId": "elite-quota-b8gvj",
-  "appId": "1:265487428650:web:9b7793ae1cc63cc4b4e753",
-  "apiKey": "AIzaSyCXEbaJfzuGCRN4hJ0QOh6tYRlRXOzJ9F4",
-  "authDomain": "elite-quota-b8gvj.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-82a71546-28ea-4fbe-a131-00beb8a58834",
-  "storageBucket": "elite-quota-b8gvj.firebasestorage.app",
-  "messagingSenderId": "265487428650",
+  "projectId": "",
+  "appId": "",
+  "authDomain": "",
+  "firestoreDatabaseId": "",
+  "storageBucket": "",
+  "messagingSenderId": "",
   "measurementId": ""
 }
